@@ -1,0 +1,9 @@
+2022-12-30 20:21:28 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CONTACT" not found (this database is empty); SQL statement:
+select company0_.id as id1_0_, company0_.name as name2_0_, (select count(c.id) from Contact c where c.company_id = company0_.id) as formula1_ from company company0_ [42104-214]
+2022-12-30 20:23:14 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CONTACT" not found (this database is empty); SQL statement:
+select company0_.id as id1_0_, company0_.name as name2_0_, (select count(c.id) from Contact c where c.company_id = company0_.id) as formula1_ from company company0_ [42104-214]
+2022-12-30 21:01:23 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CONTACT" not found (this database is empty); SQL statement:
+select company0_.id as id1_0_, company0_.name as name2_0_, (select count(c.id) from Contact c where c.company_id = company0_.id) as formula1_ from company company0_ [42104-214]
