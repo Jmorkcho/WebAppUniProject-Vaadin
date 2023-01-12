@@ -12,9 +12,9 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import java.util.Collections;
 
-@EnableWebSecurity 
+@EnableWebSecurity
 @Configuration
-public class SecurityConfig extends VaadinWebSecurity { 
+public class SecurityConfig extends VaadinWebSecurity {
 
     /**
      * Demo SimpleInMemoryUserDetailsManager, which only provides
@@ -36,15 +36,21 @@ public class SecurityConfig extends VaadinWebSecurity {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/images/**").permitAll(); 
+        http.authorizeRequests().antMatchers("/images/**").permitAll();
 
         super.configure(http);
 
         setLoginView(http, LoginView.class);
+
+
+        //trying to enable H2 console - enable to connect, BUT the application doesn't start in the LOGIN page/does not need login
+        //comment 2 rows below and login IS A MUST
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
     }
 
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
-        return new SimpleInMemoryUserDetailsManager(); 
+        return new SimpleInMemoryUserDetailsManager();
     }
 }
