@@ -46,9 +46,10 @@ public class ContactForm extends FormLayout {
     status.setItems(statuses);
     status.setItemLabelGenerator(Status::getName);
 
-    add(firstName, 
+    add(firstName,
         lastName,
         email,
+        emailStatus,
         company,
         status,
         createButtonsLayout());

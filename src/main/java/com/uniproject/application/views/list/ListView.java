@@ -19,7 +19,8 @@ import javax.annotation.security.RolesAllowed;
 @PageTitle("Contacts | Vaadin Uni Project")
 public class ListView extends VerticalLayout {
     Grid<Contact> grid = new Grid<>(Contact.class);
-    TextField filterText = new TextField();
+    TextField filterNameText = new TextField();
+    TextField filterEmailText = new TextField();
     ContactForm form;
     CrmService service;
 
@@ -78,15 +79,20 @@ public class ListView extends VerticalLayout {
     }
 
     private HorizontalLayout getToolbar() {
-        filterText.setPlaceholder("Filter by name...");
-        filterText.setClearButtonVisible(true);
-        filterText.setValueChangeMode(ValueChangeMode.LAZY);
-        filterText.addValueChangeListener(e -> updateList());
+        filterNameText.setPlaceholder("Filter by name...");
+        filterNameText.setClearButtonVisible(true);
+        filterNameText.setValueChangeMode(ValueChangeMode.LAZY);
+        filterNameText.addValueChangeListener(e -> updateList());
+
+        filterEmailText.setPlaceholder("Filter by email...");
+        filterEmailText.setClearButtonVisible(true);
+        filterEmailText.setValueChangeMode(ValueChangeMode.LAZY);
+        filterEmailText.addValueChangeListener(e -> updateList());
 
         Button addContactButton = new Button("Add contact");
         addContactButton.addClickListener(click -> addContact());
 
-        HorizontalLayout toolbar = new HorizontalLayout(filterText, addContactButton);
+        HorizontalLayout toolbar = new HorizontalLayout(filterNameText, filterEmailText, addContactButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
@@ -112,8 +118,7 @@ public class ListView extends VerticalLayout {
         editContact(new Contact());
     }
 
-
     private void updateList(){
-        grid.setItems(service.findAllContacts(filterText.getValue()));
+        grid.setItems(service.findAllContacts(filterEmailText.getValue(),filterNameText.getValue()));
     }
 }

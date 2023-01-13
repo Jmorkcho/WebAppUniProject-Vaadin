@@ -1,5 +1,6 @@
 package com.uniproject.application.data.service;
 
+
 import com.uniproject.application.data.entity.Company;
 import com.uniproject.application.data.entity.Contact;
 import com.uniproject.application.data.entity.Status;
@@ -16,22 +17,30 @@ public class CrmService {
     private final ContactRepository contactRepository;
     private final CompanyRepository companyRepository;
     private final StatusRepository statusRepository;
+    private final ContactDbService contactDbService;
 
     public CrmService(ContactRepository contactRepository,
                       CompanyRepository companyRepository,
-                      StatusRepository statusRepository) {
+                      StatusRepository statusRepository,
+                      ContactDbService contactDbService) {
         this.contactRepository = contactRepository;
         this.companyRepository = companyRepository;
         this.statusRepository = statusRepository;
+        this.contactDbService = contactDbService;
     }
 
-    public List<Contact> findAllContacts(String stringFilter) {
-        if (stringFilter == null || stringFilter.isEmpty()) {
-            return contactRepository.findAll();
-        } else {
-            return contactRepository.search(stringFilter);
-        }
+    public List<Contact> findAllContacts(String emailFilter, String nameFilter) {
+        return  contactDbService.findByEmailAndOrName(emailFilter, nameFilter);
     }
+
+
+//    public List<Contact> findAllContactsByEmail(String stringFilter2) {
+//        if (StringUtils.isBlank(stringFilter2)) {
+//            return contactRepository.findAll();
+//        } else {
+//            return contactRepository.search(stringFilter2);
+//        }
+//    }
 
     public long countContacts() {
         return contactRepository.count();
