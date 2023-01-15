@@ -58,6 +58,19 @@ public class CrmService {
         contactRepository.save(contact);
     }
 
+    public void deleteCompany(Company company) {
+        companyRepository.delete(company);
+    }
+
+    public void saveCompany(Company company) {
+        if (company == null) {
+            System.err.println("Contact is null. Are you sure you have connected your form to the application?");
+            return;
+        }
+        companyRepository.save(company);
+    }
+
+
     public List<Company> findAllCompanies() {
         return companyRepository.findAll();
     }
