@@ -60,9 +60,7 @@ public class Contact extends AbstractEntity {
         this.company = company;
     }
 
-    public Status getStatus() {
-        return status;
-    }
+    public Status getStatus() {return status;}
 
     public void setStatus(Status status) {
         this.status = status;
