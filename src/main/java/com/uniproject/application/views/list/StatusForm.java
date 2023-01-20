@@ -1,6 +1,6 @@
 package com.uniproject.application.views.list;
 
-import com.uniproject.application.data.entity.Company;
+import com.uniproject.application.data.entity.Status;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
@@ -10,25 +10,24 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
 
 import java.util.List;
 
-public class CompanyForm extends FormLayout {
+public class StatusForm extends FormLayout {
     TextField name = new TextField();
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
-    Binder<Company> binder = new Binder<>(Company.class);
-    private Company company;
+    Binder<Status> binder = new Binder<>(Status.class);
+    private Status status;
 
-    public CompanyForm(List<Company> companies) {
-        addClassName("company-form");
-        binder.forField(name).bind(Company::getName, Company::setName);
-        binder.setBean(company);
-        name.setLabel("Company name");
+    public StatusForm(List<Status> statuses) {
+        addClassName("status-form");
+        binder.forField(name).bind(Status::getName, Status::setName);
+        binder.setBean(status);
+        name.setLabel("Status name");
 
         add(name, createButtonsLayout());
     }
@@ -42,7 +41,7 @@ public class CompanyForm extends FormLayout {
         close.addClickShortcut(Key.ESCAPE);
 
         save.addClickListener(event -> validateAndSave());
-        delete.addClickListener(event -> fireEvent(new DeleteEvent(this, company)));
+        delete.addClickListener(event -> fireEvent(new DeleteEvent(this, status)));
         close.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
         binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
@@ -50,48 +49,46 @@ public class CompanyForm extends FormLayout {
     }
 
     private void validateAndSave() {
-        try {
-            binder.writeBean(company);
-            fireEvent(new SaveEvent(this, company));
-        } catch (ValidationException e) {
-            e.printStackTrace();
+        if (status != null) {
+            binder.writeBeanIfValid(status);
         }
+        fireEvent(new SaveEvent(this, status));
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
-        binder.readBean(company);
+    public void setStatus(Status status) {
+        this.status = status;
+        binder.readBean(status);
     }
 
     // Events
-    public static abstract class CompanyFormEvent extends ComponentEvent<CompanyForm> {
-        private Company company;
+    public static abstract class StatusFormEvent extends ComponentEvent<StatusForm> {
+        private Status status;
 
-        protected CompanyFormEvent(CompanyForm source, Company company) {
+        protected StatusFormEvent(StatusForm source, Status status) {
             super(source, false);
-            this.company = company;
+            this.status = status;
         }
 
-        public Company getCompany() {
-            return company;
-        }
-    }
-
-    public static class SaveEvent extends CompanyFormEvent {
-        SaveEvent(CompanyForm source, Company company) {
-            super(source, company);
+        public Status getStatus() {
+            return status;
         }
     }
 
-    public static class DeleteEvent extends CompanyFormEvent {
-        DeleteEvent(CompanyForm source, Company company) {
-            super(source, company);
+    public static class SaveEvent extends StatusFormEvent {
+        SaveEvent(StatusForm source, Status status) {
+            super(source, status);
+        }
+    }
+
+    public static class DeleteEvent extends StatusFormEvent {
+        DeleteEvent(StatusForm source, Status status) {
+            super(source, status);
         }
 
     }
 
-    public static class CloseEvent extends CompanyFormEvent {
-        CloseEvent(CompanyForm source) {
+    public static class CloseEvent extends StatusFormEvent {
+        CloseEvent(StatusForm source) {
             super(source, null);
         }
     }
