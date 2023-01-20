@@ -70,6 +70,18 @@ public class CrmService {
         companyRepository.save(company);
     }
 
+    public void deleteStatus(Status status ) {
+        statusRepository.delete(status);
+    }
+
+    public void saveStatus(Status status) {
+        if (status == null) {
+            System.err.println("Contact is null. Are you sure you have connected your form to the application?");
+            return;
+        }
+        statusRepository.save(status);
+    }
+
 
     public List<Company> findAllCompanies() {
         return companyRepository.findAll();

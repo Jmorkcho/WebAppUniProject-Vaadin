@@ -4,6 +4,7 @@ import com.uniproject.application.data.entity.Company;
 import com.uniproject.application.data.service.CrmService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -12,7 +13,7 @@ import com.vaadin.flow.router.Route;
 
 import javax.annotation.security.RolesAllowed;
 
-@RolesAllowed({"ROLE_USER","ROLE_ADMIN"})
+@RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
 @Route(value = "list_of_companies", layout = MainLayout.class)
 @PageTitle("Companies | Vaadin Uni Project")
 public class CompanyView extends VerticalLayout {
@@ -57,32 +58,40 @@ public class CompanyView extends VerticalLayout {
     }
 
     private void deleteCompany(CompanyForm.DeleteEvent event) {
-        service.deleteCompany(event.getCompany());
-        updateList();
-        closeEditor();
+        try {
+            service.deleteCompany(event.getCompany());
+            updateList();
+            closeEditor();
+        } catch (Exception e) {
+            Dialog dialog = new Dialog();
+            dialog.setCloseOnEsc(true);
+            dialog.setCloseOnOutsideClick(true);
+            dialog.add(String.format("Unable to delete company %s.", event.getCompany().getName()));
+            dialog.open();
+        }
     }
 
     private void configureGrid() {
         grid.addClassNames("contact-grid");
         grid.setSizeFull();
-        grid.addColumn(company -> company.getName()).setHeader("Company").setSortable(true);
+        //grid.addColumn(Company::getName).setHeader("Company").setSortable(true);
         grid.getColumns().forEach(col -> col.setAutoWidth(false));
 
-        grid.asSingleSelect().addValueChangeListener(event ->
-                editCompany(event.getValue()));
+        grid.asSingleSelect().addValueChangeListener(company ->
+                editCompany(company.getValue()));
     }
 
     private HorizontalLayout getToolbar() {
 
-        Button addContactButton = new Button("Add company");
-        addContactButton.addClickListener(click -> addCompany());
+        Button addCompanyButton = new Button("Add company");
+        addCompanyButton.addClickListener(click -> addCompany());
 
-        HorizontalLayout toolbar = new HorizontalLayout(addContactButton);
+        HorizontalLayout toolbar = new HorizontalLayout(addCompanyButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
 
-    private void editCompany(Company company){
+    private void editCompany(Company company) {
         if (company == null) {
             closeEditor();
         } else {
@@ -103,7 +112,7 @@ public class CompanyView extends VerticalLayout {
         editCompany(new Company());
     }
 
-    private void updateList(){
+    private void updateList() {
         grid.setItems(service.findAllCompanies());
     }
 }
